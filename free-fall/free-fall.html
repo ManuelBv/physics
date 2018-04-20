@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="free-fall.css">
+
+
+<div class="site_container">
+    <h2>Free fall</h2>
+    <p>
+        In physics
+        <a href="https://en.wikipedia.org/wiki/Free_fall#Uniform_gravitational_field_without_air_resistance" target="_blank">free fall</a> is considered when you allow an object to fall towards the ground with only gravity acting on it. We'll
+        ignore friction with air to make things simpler.
+    </p>
+    <p>Formulas used:</p>
+    <p>
+        <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/4f438e37b90a9ef0f2a92dc5f87f780058a5b1dc"/><br>
+        <img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/1410a3b633643c821784aaef8df60fe955da3fb5"/>
+
+    </p> 
+    <div class="main">
+        <div class="draw_board">
+            <canvas id="falling_object" ></canvas>
+        </div>
+
+        <div class="input_data">
+            <h4>Insert height</h4>
+            <span>Note: mass is NOT needed as the speed of the fall is determined only by height, not mass of object!</span>
+            <input type="number" min="1" max="100" step="1"><br>
+            <button>Run experiment=> </button>
+        </div>
+
+        <div class="graph">
+            <p>The graph shows height versus velocity.</p>
+            <canvas id="fall_graph"></canvas>
+            <p>Use below slider to change time and update the graph from above.</p>
+            <p class="time">Time: <input type="range" min="1" max="100" step="1"> <input type="number" min="1" max="100" step="1"> </p>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="../js/lib/vendor/jquery.min.js"></script>
+<script src="free-fall.js"></script>

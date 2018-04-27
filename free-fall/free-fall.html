@@ -16,19 +16,19 @@
     </p> 
     <div class="main">
         <div class="draw_board">
-            <canvas id="falling_object" ></canvas>
+            <canvas id="falling_object" width="458" height="400"></canvas>
         </div>
 
         <div class="input_data">
-            <h4>Insert height</h4>
-            <span>Note: mass is NOT needed as the speed of the fall is determined only by height, not mass of object!</span>
+            <h4>Insert HEIGHT</h4>
+            <span>Note: <del>mass</del> is NOT needed as the speed of the fall is determined only by <strong>height</strong>, not <del>mass</del> of object! Set height in <strong>metres</strong> (<a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank">SI</a>)!</span>
             <input type="number" min="1" max="100" step="1"><br>
             <button>Run experiment=> </button>
         </div>
 
         <div class="graph">
             <p>The graph shows height versus velocity.</p>
-            <canvas id="fall_graph"></canvas>
+            <canvas id="fall_graph" width="500" height="320"></canvas>
             <p>Use below slider to change time and update the graph from above.</p>
             <p class="time">Time: <input type="range" min="1" max="100" step="1"> <input type="number" min="1" max="100" step="1"> </p>
         </div>

@@ -26,18 +26,20 @@
 
 .draw_board {
     width: 40%;
-    height: 400px;
+    height: 420px;
     border: solid 1px #ccc;
     float: left;
     padding: 10px;
+    min-width: 438px;
 }
 
 .input_data {
     width: 15%;
-    height: 400px;
+    height: 420px;
     float: left;
     border: solid 1px #ccc;
     padding: 10px;
+    min-width: 160px;
 }
 
 .input_data h4 {
@@ -67,10 +69,11 @@
 
 .graph {
     width: 44%;
-    height: 400px;
+    height: 420px;
     float: left;
     border: solid 1px #ccc;
     padding: 10px;
+    min-width: 470px;
 }
 
 .graph p.time {
@@ -79,10 +82,12 @@
 }
 
 #falling_object {
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
+    border: solid 1px #000;
 }
 
 #fall_graph {
-    width: 100%;
+    /* width: 100%; */
+    border: solid 1px #000;
 }

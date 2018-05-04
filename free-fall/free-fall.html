@@ -24,13 +24,21 @@
             <span>Note: <del>mass</del> is NOT needed as the speed of the fall is determined only by <strong>height</strong>, not <del>mass</del> of object! Set height in <strong>metres</strong> (<a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank">SI</a>)!</span>
             <input type="number" min="1" max="100" step="1"><br>
             <button>Run experiment=> </button>
+            <br>
+            <br>
+
+            <h4>RESULTS</h4> 
+            <strong>Height </strong><span class="drop_height"></span><br>
+            <strong>Max velocity</strong><br> 
+            <span class="max_velocity"></span><br>
+            <strong>Total time</strong> <span class="total_time"></span><br>
         </div>
 
         <div class="graph">
             <p>The graph shows height versus velocity.</p>
             <canvas id="fall_graph" width="500" height="320"></canvas>
             <p>Use below slider to change time and update the graph from above.</p>
-            <p class="time">Time: <input type="range" min="1" max="100" step="1"> <input type="number" min="1" max="100" step="1"> </p>
+            <p class="time">Time: <input type="range" min="1" max="100" step="1"> <input type="number" min="1" max="100" step="1" val="0"> s </p>
         </div>
     </div>
 </div>

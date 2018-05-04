@@ -1,93 +1,99 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .site_container {
-    max-width: 1200px;
-    margin: 0 auto;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .site_container h2 {
-    text-align: center;
-    text-transform: uppercase;
-    padding: 20px 0;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 20px 0;
 }
 
 .site_container p {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .main {
-    width: 100%;
-    float: left;
+  width: 100%;
+  float: left;
 }
 
 .draw_board {
-    width: 40%;
-    height: 420px;
-    border: solid 1px #ccc;
-    float: left;
-    padding: 10px;
-    min-width: 438px;
+  width: 40%;
+  height: 420px;
+  border: solid 1px #ccc;
+  float: left;
+  padding: 10px;
+  min-width: 438px;
 }
 
 .input_data {
-    width: 15%;
-    height: 420px;
-    float: left;
-    border: solid 1px #ccc;
-    padding: 10px;
-    min-width: 160px;
+  width: 15%;
+  height: 420px;
+  float: left;
+  border: solid 1px #ccc;
+  padding: 10px;
+  min-width: 160px;
 }
 
 .input_data h4 {
-    padding: 10px 0;
-    text-align: center;
+  padding: 10px 0;
+  text-align: center;
 }
 
 .input_data span {
-    margin-bottom: 20px;
-    display: block;
+  margin-bottom: 20px;
+  display: block;
 }
 
 .input_data input {
-    width: 100%;
-    height: 20px;
-    font-size: 15px;
-    padding-left: 43%;
-    margin-bottom: 5px;
+  width: 100%;
+  height: 20px;
+  font-size: 15px;
+  padding-left: 43%;
+  margin-bottom: 5px;
 }
 
 .input_data button {
-    width: 100%;
-    height: 32px;
-    background: #000;
-    color: #fff;
+  width: 100%;
+  height: 32px;
+  background: #000;
+  color: #fff;
 }
 
 .graph {
-    width: 44%;
-    height: 420px;
-    float: left;
-    border: solid 1px #ccc;
-    padding: 10px;
-    min-width: 470px;
+  width: 44%;
+  height: 420px;
+  float: left;
+  border: solid 1px #ccc;
+  padding: 10px;
+  min-width: 470px;
 }
 
 .graph p.time {
-    text-align: center;
-    margin-top: 10px;
+  text-align: center;
+  margin-top: 10px;
 }
 
 #falling_object {
-    /* width: 100%;
+  /* width: 100%;
     height: 100%; */
-    border: solid 1px #000;
+  border: solid 1px #000;
 }
 
 #fall_graph {
-    /* width: 100%; */
-    border: solid 1px #000;
+  /* width: 100%; */
+  border: solid 1px #000;
+}
+
+.input_data .max_velocity,
+.input_data .total_time,
+.input_data .drop_height  {
+  display: inline;
 }

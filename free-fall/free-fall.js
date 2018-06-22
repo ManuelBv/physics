@@ -1,32 +1,55 @@
 /* INITIAL */
-const expButton = $(".input_data button");
-const inputBtn = $(".input_data input");
+const inputBtn = $('.input_data input');
+const expButton = $('.input_data button');
+
 runExperiment();
 
 
 /* BUTTONS */
-inputBtn.on("keypress", function (e) {
+inputBtn.on('keypress', function (e) {
   if (e.keyCode === 13) {
+    disableButtons();
     let height = Number(inputBtn.val());
     runExperiment(height);
   }
 });
 
-expButton.on("click", function () {
+expButton.on('click', function () {
   let height = Number(inputBtn.val());
 
-  if (height !== "") {
+  if (height !== '') {
     runExperiment(height);
   } else {
-    let heightC = Number(prompt("Insert height!", 22));
+    let heightC = Number(prompt('Insert height!', 22));
     runExperiment(heightC);
   }
+
+  disableButtons();
+
 });
 
 
 /* FUNCTIONS */
 /* 
-@runAnimation = main actions are refred to in here
+@disableButtons =disable buttons when experiment runs
+*/
+function disableButtons() {
+  inputBtn.attr('disabled', '');
+  expButton.attr('disabled', '');
+}
+
+
+/* 
+@enableButtons = re-enable buttons when experiment finishes
+*/
+function enableButtons() {
+  inputBtn.removeAttr('disabled');
+  expButton.removeAttr('disabled');
+}
+
+
+/* 
+@runAnimation = animation control center
 */
 function runAnimation(ctx, canvas, height, coordSys) {
   console.clear();
@@ -43,28 +66,37 @@ function runAnimation(ctx, canvas, height, coordSys) {
   let scalePixelInfo = window.scalePixelInfo;
 
   let ballX = 150;
-  let ballY = convY( coordSys.origY + scalePixelInfo.pixelsPerSegment * height, canvas);
-  console.log('scalePixelInfo', scalePixelInfo, 'ball y is', coordSys.origY + scalePixelInfo.pixelsPerSegment * height ); 
-  
+  let ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * height, canvas);
+  console.log('scalePixelInfo', scalePixelInfo, 'ball y is', coordSys.origY + scalePixelInfo.pixelsPerSegment * height);
+
   drawBall(ballX, ballY, ctx, canvas);
 
+  var starttime;
+  var totalTimeMS = totalTime * 1000;
+  var globalAnimID = requestAnimationFrame(timestamp => {
+    starttime = timestamp;
+    drawBallStep(timestamp, totalTime);
+  })
 
 
-  timer = setInterval(function(){
+  function drawBallStep(timestamp, totalTime) {
     console.log('time', time, 'velocity', velocity, 'height', newHeight, 'maxtime', totalTime);
-    ballY = convY( coordSys.origY + scalePixelInfo.pixelsPerSegment * newHeight, canvas);
+    ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * newHeight, canvas);
     drawBall(ballX, ballY, ctx, canvas);
 
-    if ( time >= totalTime || newHeight <= 0) {
-      clearInterval(timer);
+    var runtime = timestamp - starttime;
+
+    time = Number((runtime / 1000 ).toFixed(2));
+    velocity = Number((g * time).toFixed(2));
+    newHeight = Number((height - (0.5 * g * time * time)).toFixed(2));
+
+    if (runtime <= totalTimeMS ) {
+      requestAnimationFrame(timestamp => drawBallStep(timestamp, totalTime));
+    } else {
+      cancelAnimationFrame(globalAnimID);
+      enableButtons();
     }
-
-    time = Number( (time + 0.01).toFixed(2) );
-    velocity = Number( (g * time).toFixed(2) );
-    newHeight = Number(  (height - ( 0.5 * g * time * time)).toFixed(2) );
-
-  }, 10);
-
+  }
 }
 
 
@@ -74,32 +106,32 @@ function runAnimation(ctx, canvas, height, coordSys) {
 
 function drawBall(x, y, ctx, canvas) {
   clearBallArea(ctx, canvas);
-  ctx.strokeStyle = "rgba(0,0,0,1)";
+  ctx.strokeStyle = 'rgba(0,0,0,1)';
   ctx.beginPath();
   ctx.moveTo(x, y);
 
-  ctx.arc(x-5, y, 5, 0, Math.PI *2, true);
+  ctx.arc(x - 5, y, 5, 0, Math.PI * 2, true);
 
   ctx.stroke();
 }
 
 
 /* 
-@drawBall = draws the ball and animates it
+@clearBallArea = clears the area the ball was in
 */
-function clearBallArea(ctx, canvas){
-  ctx.clearRect(130, 0, canvas.width, canvas.height - 31 );
+function clearBallArea(ctx, canvas) {
+  ctx.clearRect(130, 0, canvas.width, canvas.height - 31);
 }
 
 /* 
-@runExperiment = main actions are refred to in here
+@runExperiment = main actions are referred to in here
 */
 function runExperiment(initialHeight) {
   let height = 30;
   let g = 9.81;
   let animate = false;
-  let canvas = $("#falling_object")[0];
-  let ctx = canvas.getContext("2d");
+  let canvas = $('#falling_object')[0];
+  let ctx = canvas.getContext('2d');
   let coordSys = {
     origX: 70,
     origY: 30,
@@ -126,7 +158,7 @@ function runExperiment(initialHeight) {
 
 
 /* 
-@clearScreen = empty the canvas for a new draw
+@clearScreen = empty the entire canvas for a new draw
 */
 function clearScreen(ctx, canvas) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -137,7 +169,7 @@ function clearScreen(ctx, canvas) {
 @drawScale = draw the scale based on the height inserted; sometimes display the intermediate values of segments in the Y scale
 */
 function drawScale(height, coordSys, ctx, canvas) {
-  ctx.strokeStyle = "rgba(0,0,0,1)";
+  ctx.strokeStyle = 'rgba(0,0,0,1)';
   ctx.beginPath();
 
   let gradationLevels = height.toString().length - 1;
@@ -167,7 +199,7 @@ function drawScale(height, coordSys, ctx, canvas) {
       convY(coordSys.origY + gradationDividerPixelsPerSegments * j, canvas)
     );
     let text = multiplier * j;
-    ctx.font = "14px Arial";
+    ctx.font = '14px Arial';
     ctx.fillText(
       text,
       coordSys.origX + 10,
@@ -181,10 +213,10 @@ function drawScale(height, coordSys, ctx, canvas) {
   for (let i = 1; i < segments + 1; i++) {
     let segmentText = i * (multiplier / 10);
     if (gradationDividers > 4 || i % 10 === 0 || height < 5) {
-      segmentText = "";
+      segmentText = '';
     }
 
-    ctx.font = "7px Arial";
+    ctx.font = '7px Arial';
     ctx.fillText(
       segmentText,
       coordSys.origX + 5,
@@ -214,7 +246,7 @@ function drawScale(height, coordSys, ctx, canvas) {
 
   ctx.stroke();
 
-  window.scalePixelInfo = scalePixelInfo; 
+  window.scalePixelInfo = scalePixelInfo;
 
 }
 
@@ -223,7 +255,7 @@ function drawScale(height, coordSys, ctx, canvas) {
 @xyLines = the X and Y lines of the coord sys
 */
 function xyLines(coordSys, canvas, ctx) {
-  ctx.strokeStyle = "rgba(0,0,0,1)";
+  ctx.strokeStyle = 'rgba(0,0,0,1)';
   ctx.beginPath();
 
   // x axis
@@ -255,8 +287,8 @@ function updateResult(height, g) {
   let maxVelocity = Number((g * totalTime).toFixed(2));
   let kmph = Number((maxVelocity * 3.6).toFixed(2));
 
-  $(".drop_height").text(height + " m");
-  $(".max_velocity").html(maxVelocity + " m/s or <br> " + kmph + " km/h");
-  $(".total_time").text(totalTime + " s");
+  $('.drop_height').text(height + ' m');
+  $('.max_velocity').html(maxVelocity + ' m/s or <br> ' + kmph + ' km/h');
+  $('.total_time').text(totalTime + ' s');
   $('.graph input[type="number"]').val(totalTime);
 }

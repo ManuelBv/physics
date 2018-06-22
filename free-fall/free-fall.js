@@ -66,32 +66,36 @@ function runAnimation(ctx, canvas, height, coordSys) {
   let scalePixelInfo = window.scalePixelInfo;
 
   let ballX = 150;
-  let ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * height, canvas);
-  console.log('scalePixelInfo', scalePixelInfo, 'ball y is', coordSys.origY + scalePixelInfo.pixelsPerSegment * height);
+  let ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * correctedHeight(height), canvas);
+  let stats = [time, velocity, height];
+  console.log('scalePixelInfo', scalePixelInfo, 'ball y is', coordSys.origY + scalePixelInfo.pixelsPerSegment * correctedHeight(height));
 
-  drawBall(ballX, ballY, ctx, canvas);
+  drawBallAndStats(ballX, ballY, ctx, canvas);
 
-  var starttime;
+  var startTime;
   var totalTimeMS = totalTime * 1000;
-  var globalAnimID = requestAnimationFrame(timestamp => {
-    starttime = timestamp;
-    drawBallStep(timestamp, totalTime);
+  var globalAnimID = requestAnimationFrame(timeStamp => {
+    startTime = timeStamp;
+    drawBallStep(timeStamp, totalTime);
   })
 
 
-  function drawBallStep(timestamp, totalTime) {
-    console.log('time', time, 'velocity', velocity, 'height', newHeight, 'maxtime', totalTime);
-    ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * newHeight, canvas);
-    drawBall(ballX, ballY, ctx, canvas);
+  function drawBallStep(timeStamp, totalTime) {
+    
+    ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * correctedHeight(height, newHeight), canvas);
+    stats = [time, velocity, newHeight];
+    console.log('ballY', ballY, 'time', time, 'velocity', velocity, 'height', newHeight, 'maxtime', totalTime);
 
-    var runtime = timestamp - starttime;
+    drawBallAndStats(ballX, ballY, ctx, canvas, stats);
 
-    time = Number((runtime / 1000 ).toFixed(2));
+    var runTime = timeStamp - startTime;
+
+    time = Number((runTime / 1000 ).toFixed(2));
     velocity = Number((g * time).toFixed(2));
     newHeight = Number((height - (0.5 * g * time * time)).toFixed(2));
 
-    if (runtime <= totalTimeMS ) {
-      requestAnimationFrame(timestamp => drawBallStep(timestamp, totalTime));
+    if (runTime <= totalTimeMS ) {
+      requestAnimationFrame(timeStamp => drawBallStep(timeStamp, totalTime));
     } else {
       cancelAnimationFrame(globalAnimID);
       enableButtons();
@@ -101,16 +105,64 @@ function runAnimation(ctx, canvas, height, coordSys) {
 
 
 /* 
-@drawBall = draws the ball and animates it
+@correctedHeight = adjusting height as per canvas height, not actual height
+*/
+function correctedHeight(height, newHeight) {
+  if (height > 99) {
+    height = parseInt(height, 10);
+    var division = height.toString().length;
+    height = height / Math.pow(10, (division - 2));
+    
+    if (newHeight) {
+      newHeight = newHeight / Math.pow(10, (division - 2));
+      return newHeight;
+    }
+  } else {
+    if (newHeight) {
+      return newHeight;
+    }
+  }
+
+  return height;
+}
+
+/* 
+@drawBallAndStats = draws the ball and animates it
 */
 
-function drawBall(x, y, ctx, canvas) {
+function drawBallAndStats(x, y, ctx, canvas, stats) {
+
+  if (stats) {
+    var time = Number(stats[0].toFixed(2));
+    var velocity = Number(stats[1].toFixed(2));
+    var height = Number(stats[2].toFixed(2));
+  }
+
+
   clearBallArea(ctx, canvas);
   ctx.strokeStyle = 'rgba(0,0,0,1)';
   ctx.beginPath();
   ctx.moveTo(x, y);
 
   ctx.arc(x - 5, y, 5, 0, Math.PI * 2, true);
+
+
+  ctx.moveTo(x + 5, y - 7);
+  ctx.lineTo(x + 30, y - 30);
+  ctx.lineTo(x + 250, y - 30);
+
+
+  var veloText = ' VELOCITY ' + velocity + ' m/s';
+  ctx.font = '14px Arial';
+  ctx.fillText(veloText, x  + 30, y - 35);
+
+  var timeText = ' | TIME ' + time + ' s';
+  ctx.font = '14px Arial';
+  ctx.fillText(timeText, x  + 170, y - 35);
+
+  var heightText = ' HEIGHT ' + height + ' m';
+  ctx.font = '17px Arial';
+  ctx.fillText(heightText, x  + 60, y - 10);
 
   ctx.stroke();
 }

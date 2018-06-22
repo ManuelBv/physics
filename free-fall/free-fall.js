@@ -144,14 +144,17 @@ function drawBallAndStats(x, y, ctx, canvas, stats) {
   ctx.beginPath();
   ctx.moveTo(x, y);
 
+  // draw ball
   ctx.arc(x - 5, y, 5, 0, Math.PI * 2, true);
 
 
+  // draw stat lines
   ctx.moveTo(x + 5, y - 7);
   ctx.lineTo(x + 30, y - 30);
   ctx.lineTo(x + 250, y - 30);
 
 
+  // draw text
   var veloText = ' VELOCITY ' + velocity + ' m/s';
   ctx.font = '14px Arial';
   ctx.fillText(veloText, x  + 30, y - 35);

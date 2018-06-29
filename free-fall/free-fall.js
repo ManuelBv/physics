@@ -73,6 +73,8 @@ function runAnimation(ctx, canvas, height, coordSys) {
   drawBallAndStats(ballX, ballY, ctx, canvas);
 
   var startTime;
+  var progress = 0;
+  var phantomBallArray = [];
   var totalTimeMS = totalTime * 1000;
   var globalAnimID = requestAnimationFrame(timeStamp => {
     startTime = timeStamp;
@@ -84,21 +86,29 @@ function runAnimation(ctx, canvas, height, coordSys) {
     
     ballY = convY(coordSys.origY + scalePixelInfo.pixelsPerSegment * correctedHeight(height, newHeight), canvas);
     stats = [time, velocity, newHeight];
-    console.log('ballY', ballY, 'time', time, 'velocity', velocity, 'height', newHeight, 'maxtime', totalTime);
-
-    drawBallAndStats(ballX, ballY, ctx, canvas, stats);
+    console.log('progress', progress, 'ballY', ballY, 'time', time, 'velocity', velocity, 'height', newHeight, 'maxtime', totalTime);
 
     var runTime = timeStamp - startTime;
+    progress = Number( ( runTime / totalTime / 100 ).toFixed(2) );
 
+    drawBallAndStats(ballX, ballY, ctx, canvas, stats);
+    if ( (progress * 10).toFixed(0) % 15 === 0 ) {
+      console.log('********************************phantoms')
+      phantomBallArray.push({ballX, ballY});
+    }
+    
     time = Number((runTime / 1000 ).toFixed(2));
     velocity = Number((g * time).toFixed(2));
     newHeight = Number((height - (0.5 * g * time * time)).toFixed(2));
 
-    if (runTime <= totalTimeMS ) {
-      requestAnimationFrame(timeStamp => drawBallStep(timeStamp, totalTime));
+    if ( runTime <= totalTimeMS ) {
+        requestAnimationFrame(timeStamp => drawBallStep(timeStamp, totalTime));
     } else {
       cancelAnimationFrame(globalAnimID);
       enableButtons();
+      phantomBallArray.forEach( item => {
+        drawPhantomBallPosition(item.ballX, item.ballY, ctx, canvas, stats);
+      });
     }
   }
 }
@@ -127,6 +137,24 @@ function correctedHeight(height, newHeight) {
 }
 
 /* 
+@drawPhantomBallPosition = draws the ball at different positions so that we can return to them by clicking on the shadow balls
+*/
+
+function drawPhantomBallPosition(x, y, ctx, canvas, stats) {
+  ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+
+  // draw ball
+  ctx.arc(x - 5, y, 5, 0, Math.PI * 2, true);
+
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fill();
+}
+
+
+/* 
 @drawBallAndStats = draws the ball and animates it
 */
 
@@ -138,8 +166,9 @@ function drawBallAndStats(x, y, ctx, canvas, stats) {
     var height = Number(stats[2].toFixed(2));
   }
 
+  clearBallArea(ctx, canvas, x, y);
+  clearStatsArea(ctx, canvas, x,  y);
 
-  clearBallArea(ctx, canvas);
   ctx.strokeStyle = 'rgba(0,0,0,1)';
   ctx.beginPath();
   ctx.moveTo(x, y);
@@ -174,9 +203,17 @@ function drawBallAndStats(x, y, ctx, canvas, stats) {
 /* 
 @clearBallArea = clears the area the ball was in
 */
-function clearBallArea(ctx, canvas) {
-  ctx.clearRect(130, 0, canvas.width, canvas.height - 31);
+function clearBallArea(ctx, canvas, x,  y) {
+  ctx.clearRect(x - 12, y - 12, 14, 14); // clear ball 
 }
+
+/* 
+@clearStatsArea = clears the area for the stats region
+*/
+function clearStatsArea(ctx, canvas, x,  y) {
+  ctx.clearRect(x + 4, y - 60, 290, 60); // clear stats
+}
+
 
 /* 
 @runExperiment = main actions are referred to in here
